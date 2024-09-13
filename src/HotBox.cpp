@@ -59,28 +59,20 @@ void HotBox::calculateTemps() {
 
     // Loop through each row (24 rows)
     for (int row = 0; row < 24; ++row) {
-        // Outer slice (columns 0 to 3 and 29 to 31)
-        for (int col = 0; col <= 3; ++col) {
-            outerSum += frame[row * 32 + col];
-            ++outerCount;
-        }
-        for (int col = 29; col <= 31; ++col) {
+        // Outer slice (columns 0 to 10)
+        for (int col = 0; col <= 10; ++col) {
             outerSum += frame[row * 32 + col];
             ++outerCount;
         }
 
-        // Mid slice (columns 4 to 10 and 22 to 28)
-        for (int col = 4; col <= 10; ++col) {
-            midSum += frame[row * 32 + col];
-            ++midCount;
-        }
-        for (int col = 22; col <= 28; ++col) {
+        // Mid slice (columns 11 to 20)
+        for (int col = 11; col <= 20; ++col) {
             midSum += frame[row * 32 + col];
             ++midCount;
         }
 
-        // Inner slice (columns 11 to 21)
-        for (int col = 11; col <= 21; ++col) {
+        // Inner slice (columns 21 to 32)
+        for (int col = 21; col <= 31; ++col) {
             innerSum += frame[row * 32 + col];
             ++innerCount;
         }
