@@ -15,7 +15,7 @@ HotBox::HotBox(int inWheel) {
 }
 
 void HotBox::start() {
-    if (! mlx.begin(MLX90640_I2CADDR_DEFAULT, &Wire)) {
+    if (! mlx.begin(MLX90640_I2CADDR_DEFAULT, &Wire1)) {
         Serial.println("CAMERA NOT FOUND");
         while(1) delay(10); //keep trying
     }
@@ -104,6 +104,16 @@ void HotBox::calculateTemps() {
 
 void HotBox::sendCAN() {
     msg.id = 49 + wheel; // Placeholder ID
+
+    Serial.print("INNER: ");
+    Serial.print(innerTemp);
+    Serial.println(" C");
+    Serial.print("MID: ");
+    Serial.print(midTemp);
+    Serial.println(" C");
+    Serial.print("OUTER: ");
+    Serial.print(midTemp);
+    Serial.println(" C");
 
     int16_t scaledInnerTemp = static_cast<int16_t>(innerTemp * 100);
     int16_t scaledMidTemp = static_cast<int16_t>(midTemp * 100);
