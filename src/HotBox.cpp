@@ -14,7 +14,7 @@ HotBox::HotBox(int inWheel) {
     wheel = inWheel;
 }
 
-void HotBox::start() {
+void HotBox::start(FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16>* canIn) {
     if (! mlx.begin(MLX90640_I2CADDR_DEFAULT, &Wire1)) {
         Serial.println("CAMERA NOT FOUND");
         while(1) delay(10); //keep trying
@@ -26,9 +26,8 @@ void HotBox::start() {
 
     mlx.setRefreshRate(MLX90640_2_HZ);
 
-    
-    can.begin();
-    can.setBaudRate(250000);
+    can = canIn;
+
 }
 
 bool HotBox::readyToCheck() {
@@ -129,6 +128,6 @@ void HotBox::sendCAN() {
     msg.buf[5] = (scaledOuterTemp >> 8) & 0xFF; // Upper byte of outerTemp
 
     // Send the CAN message
-    can.write(msg);
+    can->write(msg);
 }
 
