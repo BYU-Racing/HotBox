@@ -5,7 +5,9 @@
 // put function declarations here:
 
 HotBox box = HotBox(1);
-FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> can1;
+HotBox box2 = HotBox(2);
+
+FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 
 
 void setup() {
@@ -13,10 +15,14 @@ void setup() {
   Serial.begin(9600);
   can1.begin();
   can1.setBaudRate(250000);
-  box.start(&can1);
-  
+  delay(1000);
+  Serial.println("START");
+  box.start(&can1, 2);
+  box2.start(&can1, 1);
+  Serial.println("Both Camera INIT Successful");
 }
 
 void loop() {
   box.readValues();
+  box2.readValues();
 }

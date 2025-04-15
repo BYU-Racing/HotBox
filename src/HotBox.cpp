@@ -14,10 +14,18 @@ HotBox::HotBox(int inWheel) {
     wheel = inWheel;
 }
 
-void HotBox::start(FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16>* canIn) {
-    if (! mlx.begin(MLX90640_I2CADDR_DEFAULT, &Wire1)) {
-        Serial.println("CAMERA NOT FOUND");
-        while(1) delay(10); //keep trying
+void HotBox::start(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>* canIn, int camNum) {
+    this->camNum = camNum;
+    if(camNum == 1) {
+        if (! mlx.begin(MLX90640_I2CADDR_DEFAULT, &Wire1)) {
+            Serial.println("CAMERA NOT FOUND");
+            while(1) delay(10); //keep trying
+        }
+    } else {
+        if (! mlx.begin(MLX90640_I2CADDR_DEFAULT, &Wire)) {
+            Serial.println("CAMERA NOT FOUND");
+            while(1) delay(10); //keep trying
+        }
     }
 
     mlx.setMode(MLX90640_CHESS);
@@ -104,6 +112,9 @@ void HotBox::calculateTemps() {
 void HotBox::sendCAN() {
     msg.id = 49 + wheel; // Placeholder ID
 
+    Serial.print("----");
+    Serial.print(camNum);
+    Serial.println("----");
     Serial.print("INNER: ");
     Serial.print(innerTemp);
     Serial.println(" C");
@@ -113,6 +124,7 @@ void HotBox::sendCAN() {
     Serial.print("OUTER: ");
     Serial.print(midTemp);
     Serial.println(" C");
+    Serial.println("--------");
 
     int16_t scaledInnerTemp = static_cast<int16_t>(innerTemp * 100);
     int16_t scaledMidTemp = static_cast<int16_t>(midTemp * 100);
